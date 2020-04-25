@@ -12,17 +12,10 @@ import math
 
 # WGS84 defining constants
 class CONST:
-    def a_e(self):
-        return 6378137
-    
-    def f_inv(self):
-        return (1/298.257223563)
-
-    def w_e(self):
-        return 72.92115*pow(10, -6)
-
-    def mu_e(self):
-        return 3986004.418*pow(10, 8)
+    a_e   = lambda : 6378137
+    f_inv = lambda : (1/298.257223563)
+    w_e   = lambda : 72.92115*pow(10, -6)
+    mu_e  = lambda : 3986004.418*pow(10, 8)
 
 # Iterative method of Kepler's laws
 # Source: Applied GPS for Engineers and Project Managers, Clement A. Ogaja(2011)
@@ -65,8 +58,6 @@ if line_handler[1][0] != "N":
     print("Incompatible RINEX file type, please use Navigation file.")          # Check type of file
     sys.exit()
 
-
-const = CONST()                                                     # Constructor of constants class
 
 # Skip all of RINEX header
 while True:
@@ -145,7 +136,7 @@ for PRN in range(1, 3+1):
     # Step 1: WGS84 defining parameters
 
     # Step 2
-    n_0 = math.sqrt( const.mu_e()/pow(sqrt_a, 6) )
+    n_0 = math.sqrt( CONST.mu_e()/pow(sqrt_a, 6) )
 
     # Step 3
     t_k = 900
@@ -169,7 +160,7 @@ for PRN in range(1, 3+1):
     i_k = i_0 + i_1*t_k                             + C_is*math.sin(2*temp) + C_ic*math.cos(2*temp)
 
     # Step 8
-    l_k = Omega_0 + (Omega_1 - const.w_e())*t_k - const.w_e()*TOE
+    l_k = Omega_0 + (Omega_1 - CONST.w_e())*t_k - CONST.w_e()*TOE
 
     # Step 9
     x = r_k*math.cos(u_k)
