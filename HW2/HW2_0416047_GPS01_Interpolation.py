@@ -9,6 +9,7 @@
 '''
 import sys
 import math
+import re
 
 
 # WGS84 defining constants
@@ -102,7 +103,7 @@ while True:
 
     if line_handler == "":
         break
-    elif line_handler[ 0: 0+2] == " 1":
+    elif line_handler[0:0+2] == " 1":
         second_offset = float(line_handler[12:12+2])*3600 + float(line_handler[15:15+2])*60 + float(line_handler[17:17+5])
         GPS01_epoch_fp_list.append(tuple([second_offset, file_pointer]))
     
@@ -111,6 +112,7 @@ while True:
 
 
 # Main function
+pattern = re.compile(r'(?P<mantissa>[-]?\d\.\d{12})[D](?P<exponent>[-|+]\d{2})')      # Split strings into 'mantissa' and 'exponent'
 print("\nGPS01's position (X, Y, Z) at 2020/02/05 for every 15 minutes")
 print("Unit: km, Coordinate system: WGS84\n")
 
@@ -123,66 +125,53 @@ for second_offset in range(0, 86400, 900):
 
     # BROADCAST ORBIT - 1
     line_input = brdc_ephm.readline()
-    parameter_1st = line_input[ 3: 3+19].split('D')
-    parameter_2nd = line_input[22:22+19].split('D')
-    parameter_3rd = line_input[41:41+19].split('D')
-    parameter_4th = line_input[60:60+19].split('D')
+    line_input = list(re.finditer(pattern, line_input))            # Parsing with regular expression
 
-    IODE    = float(parameter_1st[0]) * pow(10, float(parameter_1st[1]))
-    C_rs    = float(parameter_2nd[0]) * pow(10, float(parameter_2nd[1]))
-    Delta_n = float(parameter_3rd[0]) * pow(10, float(parameter_3rd[1]))
-    M_0     = float(parameter_4th[0]) * pow(10, float(parameter_4th[1]))
+    IODE    = float(line_input[0].group('mantissa')) * 10**float(line_input[0].group('exponent'))
+    C_rs    = float(line_input[1].group('mantissa')) * 10**float(line_input[1].group('exponent'))
+    Delta_n = float(line_input[2].group('mantissa')) * 10**float(line_input[2].group('exponent'))
+    M_0     = float(line_input[3].group('mantissa')) * 10**float(line_input[3].group('exponent'))
 
     # BROADCAST ORBIT - 2
     line_input = brdc_ephm.readline()
-    parameter_1st = line_input[ 3: 3+19].split('D')
-    parameter_2nd = line_input[22:22+19].split('D')
-    parameter_3rd = line_input[41:41+19].split('D')
-    parameter_4th = line_input[60:60+19].split('D')
+    line_input = list(re.finditer(pattern, line_input))            # Parsing with regular expression
 
-    C_uc    = float(parameter_1st[0]) * pow(10, float(parameter_1st[1]))
-    ecc     = float(parameter_2nd[0]) * pow(10, float(parameter_2nd[1]))
-    C_us    = float(parameter_3rd[0]) * pow(10, float(parameter_3rd[1]))
-    sqrt_a  = float(parameter_4th[0]) * pow(10, float(parameter_4th[1]))
+    C_uc    = float(line_input[0].group('mantissa')) * 10**float(line_input[0].group('exponent'))
+    ecc     = float(line_input[1].group('mantissa')) * 10**float(line_input[1].group('exponent'))
+    C_us    = float(line_input[2].group('mantissa')) * 10**float(line_input[2].group('exponent'))
+    sqrt_a  = float(line_input[3].group('mantissa')) * 10**float(line_input[3].group('exponent'))
 
     # BROADCAST ORBIT - 3
     line_input = brdc_ephm.readline()
-    parameter_1st = line_input[ 3: 3+19].split('D')
-    parameter_2nd = line_input[22:22+19].split('D')
-    parameter_3rd = line_input[41:41+19].split('D')
-    parameter_4th = line_input[60:60+19].split('D')
+    line_input = list(re.finditer(pattern, line_input))            # Parsing with regular expression
 
-    TOE     = float(parameter_1st[0]) * pow(10, float(parameter_1st[1]))
-    C_ic    = float(parameter_2nd[0]) * pow(10, float(parameter_2nd[1]))
-    Omega_0 = float(parameter_3rd[0]) * pow(10, float(parameter_3rd[1]))
-    C_is    = float(parameter_4th[0]) * pow(10, float(parameter_4th[1]))
+    TOE     = float(line_input[0].group('mantissa')) * 10**float(line_input[0].group('exponent'))
+    C_ic    = float(line_input[1].group('mantissa')) * 10**float(line_input[1].group('exponent'))
+    Omega_0 = float(line_input[2].group('mantissa')) * 10**float(line_input[2].group('exponent'))
+    C_is    = float(line_input[3].group('mantissa')) * 10**float(line_input[3].group('exponent'))
 
     # BROADCAST ORBIT - 4
     line_input = brdc_ephm.readline()
-    parameter_1st = line_input[ 3: 3+19].split('D')
-    parameter_2nd = line_input[22:22+19].split('D')
-    parameter_3rd = line_input[41:41+19].split('D')
-    parameter_4th = line_input[60:60+19].split('D')
+    line_input = list(re.finditer(pattern, line_input))            # Parsing with regular expression
 
-    i_0     = float(parameter_1st[0]) * pow(10, float(parameter_1st[1]))
-    C_rc    = float(parameter_2nd[0]) * pow(10, float(parameter_2nd[1]))
-    omega   = float(parameter_3rd[0]) * pow(10, float(parameter_3rd[1]))
-    Omega_1 = float(parameter_4th[0]) * pow(10, float(parameter_4th[1]))
+    i_0     = float(line_input[0].group('mantissa')) * 10**float(line_input[0].group('exponent'))
+    C_rc    = float(line_input[1].group('mantissa')) * 10**float(line_input[1].group('exponent'))
+    omega   = float(line_input[2].group('mantissa')) * 10**float(line_input[2].group('exponent'))
+    Omega_1 = float(line_input[3].group('mantissa')) * 10**float(line_input[3].group('exponent'))
 
     # BROADCAST ORBIT - 5
     line_input = brdc_ephm.readline()
-    parameter_1st = line_input[ 3: 3+19].split('D')
-    parameter_2nd = line_input[22:22+19].split('D')
-    parameter_3rd = line_input[41:41+19].split('D')
-    parameter_4th = line_input[60:60+19].split('D')
+    line_input = list(re.finditer(pattern, line_input))            # Parsing with regular expression
 
-    i_1 = float(parameter_1st[0]) * pow(10, float(parameter_1st[1]))
+    i_1     = float(line_input[0].group('mantissa')) * 10**float(line_input[0].group('exponent'))
 
-    # BROADCAST ORBIT - 6
+    # BROADCAST ORBIT - 6: skipped at this time
     line_input = brdc_ephm.readline()
+    line_input = list(re.finditer(pattern, line_input))            # Parsing with regular expression
 
-    # BROADCAST ORBIT - 7
+    # BROADCAST ORBIT - 7: skipped at this time
     line_input = brdc_ephm.readline()
+    line_input = list(re.finditer(pattern, line_input))            # Parsing with regular expression
 
     # Calculate satellite position X, Y, Z
     # Step 1: WGS84 defining parameters
@@ -206,7 +195,7 @@ for second_offset in range(0, 86400, 900):
     # Step 6 Calculate radius of f_k
     cos_f_k = (math.cos(E) - ecc) / (1 - ecc*math.cos(E))
     sin_f_k = (math.sqrt(1 - pow(ecc, 2)) * math.sin(E)) / (1 - ecc*math.cos(E))
-    f_k = math.atan2(sin_f_k, cos_f_k)
+    f_k = math.atan2(sin_f_k, cos_f_k)                       # calculate radius using atan2 function
     
     # Step 7
     temp = omega + f_k
