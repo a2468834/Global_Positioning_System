@@ -15,7 +15,7 @@ import re
 # WGS84 defining constants
 class CONST:
     a_e   = lambda : 6378137
-    f_inv = lambda : (1/298.257223563)
+    f_inv = lambda : 298.257223563
     w_e   = lambda : 72.92115*pow(10, -6)
     mu_e  = lambda : 3986004.418*pow(10, 8)
 
