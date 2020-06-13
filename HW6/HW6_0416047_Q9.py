@@ -13,7 +13,6 @@ import re
 import numpy
 import csv
 
-fptr    = open('out.csv', 'w', newline='')
 
 class CONST:
     # WGS84 pre-defined constants
@@ -39,7 +38,7 @@ except:
     sys.exit()
 
 
-# Deal with some issues related to RINEX header
+# Deal with some issues related to SP3 header
 line_handler = sp3_ephm.readline()
 if line_handler[1] != "c":
     print("Incompatible SP3 version, please use SP3-c.")                # Check RINEX version number
@@ -125,6 +124,7 @@ for i in range(0, 32):
 
 
 # Print results
+fptr    = open('out.csv', 'w', newline='')
 keys    = sat_direction[0].keys()
 writer  = csv.DictWriter(fptr, keys)
 writer.writeheader()
