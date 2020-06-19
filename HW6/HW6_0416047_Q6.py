@@ -49,7 +49,7 @@ check_obs_lambda = math.atan2(obs_Y, obs_X)
 X2Y2          = math.sqrt(obs_X**2 + obs_Y**2)
 check_obs_h   = 0
 check_obs_phi = math.atan2(obs_Z, X2Y2*(1-e_square)) # ppi
-for i in range(0, 1000):
+for i in range(0, 10000):
     temp_N        = CONST.a_e() / math.sqrt(1 - e_square * math.sin(check_obs_phi)**2)
     check_obs_h   = (X2Y2 / math.cos(check_obs_phi)) - temp_N
     check_obs_phi = math.atan2(obs_Z, (X2Y2 * (1 - e_square * (temp_N / (temp_N + check_obs_h)))))

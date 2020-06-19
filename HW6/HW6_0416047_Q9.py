@@ -111,20 +111,23 @@ for i in range(0, 32):
     Delta_X_bar[i]['coord'] = numpy.matmul(trans_matrix, Delta_X_bar[i]['coord'])
 
 
-# Step 5 : Calculate satellites' horizontal (A, beta, r) coordinates (in degrees)
+# Step 5 : Calculate satellites' horizontal (A, beta, r) coordinates
+# A     := Azimuth (in degrees)
+# beta  := Altitude (in degrees)
+# r     := Distance (in km)
 sat_direction = []
 for i in range(0, 32):
     temp = {
              'PRN'  : sat_position[i]['PRN'],
-             'A'    : round(180 + math.degrees(math.atan2(Delta_X_bar[i]['coord'][1], Delta_X_bar[i]['coord'][0])), 3),
-             'beta' : round(math.degrees(math.atan2(Delta_X_bar[i]['coord'][2], math.sqrt(Delta_X_bar[i]['coord'][0]**2 + Delta_X_bar[i]['coord'][1]**2))), 3),
-             'r'    : round(math.sqrt(Delta_X_bar[i]['coord'][0]**2 + Delta_X_bar[i]['coord'][1]**2 + Delta_X_bar[i]['coord'][2]**2), 3)
+             'Azimuth'  : round(180 + math.degrees(math.atan2(Delta_X_bar[i]['coord'][1], Delta_X_bar[i]['coord'][0])), 3),
+             'Altitude' : round(math.degrees(math.atan2(Delta_X_bar[i]['coord'][2], math.sqrt(Delta_X_bar[i]['coord'][0]**2 + Delta_X_bar[i]['coord'][1]**2))), 3),
+             'Distance' : round(math.sqrt(Delta_X_bar[i]['coord'][0]**2 + Delta_X_bar[i]['coord'][1]**2 + Delta_X_bar[i]['coord'][2]**2), 3)
            }
     sat_direction.append(temp)
 
 
 # Print results
-fptr    = open('out.csv', 'w', newline='')
+fptr    = open('HW6_Q9_Result.csv', 'w', newline='')
 keys    = sat_direction[0].keys()
 writer  = csv.DictWriter(fptr, keys)
 writer.writeheader()
