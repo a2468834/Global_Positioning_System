@@ -1,5 +1,4 @@
-,Azimuth,Altitude,Distance
-PRN,(degree),(degree),(kilometer)
+PRN,Azimuth,Altitude,Distance
 G01,174.602,-48.382,30753.281
 G02,326.966,-22.705,27808.507
 G03,77.549,-72.574,32556.599
